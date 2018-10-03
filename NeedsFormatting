@@ -1,0 +1,265 @@
+     1  
+     2  /***************************************************************************
+     3  *
+     4  *  Programmers and Purdue Email Addresses:
+     5  *  1. park1064@purdue.edu
+     6  *  2. lchittin@purdue.edu
+     7  *  3. lrisany@purdue.edu (delete line if no third partner)
+     8  *
+     9  *  
+    10  *  Lab #:05
+    11  *
+    12  *  Academic Integrity Statement:
+    13  *
+    14  *  We have not used source code obtained from any other unauthorized source,
+    15  *  either modified or unmodified.  Neither have we provided access to our code
+    16  *  to another. The project we are submitting is our own original work.
+    17  *
+    18  *  Day, Time, Location of Lab:
+    19  *
+    20  *  Program Description:
+    21  *
+    22  ***************************************************************************/
+    23  # include <stdio.h>
+    24  # include <math.h>
+    25  #include <stdlib.h>
+    26  int enterSeed();
+    27  int calcDistToHole(int);
+    28  int calcClub(int);
+    29  int calcLoftAngle(int, int);
+    30  int calcInitialV (int);
+    31  double calcTime(int, int);
+    32  double calcTravelDist(int, int, double);
+    33  double calcDistFromHole(int, double);
+    34  void output1(int, int, int, int);
+    35  void output2(int,double, double, double, int);
+    36  void text1Output(int);
+    37  void text2Output();
+    38  int rank1(double distF1, double distF2, double distF3);
+    39  int rank2(double distF1, double distF2, double distF3);
+    40  int rank3(double distF1, double distF2, double distF3);
+    41  
+    42  int main()
+    43  {
+    44    int myDistStartToHole;
+    45    double myDistFromHole1;
+    46    double myDistFromHole2;
+    47    double myDistFromHole3;
+    48  
+    49    int myClub1;
+    50    int myClub2;
+    51    int myClub3;
+    52  
+    53    int myLoftAngle1;
+    54    int myLoftAngle2;
+    55    int myLoftAngle3;
+    56  
+    57    int myInitialV1;
+    58    int myInitialV2;
+    59    int myInitialV3;
+    60  
+    61    int myRank1;
+    62    int myRank2;
+    63    int myRank3;
+    64  
+    65    int mySeed; 
+    66    
+    67    double myTime1;
+    68    double myTime2;
+    69    double myTime3;
+    70  
+    71    double travelDist1;
+    72    double travelDist2;
+    73    double travelDist3;
+    74  
+    75    mySeed = enterSeed();
+    76    srand(mySeed);
+    77    myDistStartToHole = calcDistToHole(mySeed);
+    78    
+    79    myClub1 = calcClub(mySeed);
+    80    myLoftAngle1 = calcLoftAngle(mySeed, myClub1);
+    81    myInitialV1 = calcInitialV(mySeed);
+    82  
+    83    myClub2 = calcClub(mySeed);
+    84    myLoftAngle2 = calcLoftAngle(mySeed, myClub2);
+    85    myInitialV2 = calcInitialV(mySeed);
+    86   
+    87    myClub3 = calcClub(mySeed);
+    88    myLoftAngle3 = calcLoftAngle(mySeed, myClub3);
+    89    myInitialV3 = calcInitialV(mySeed);
+    90    
+    91    myTime1 = calcTime(myInitialV1, myLoftAngle1);
+    92    myTime2 = calcTime(myInitialV2, myLoftAngle2);
+    93    myTime3 = calcTime(myInitialV3, myLoftAngle3);
+    94  
+    95    travelDist1 = calcTravelDist(myInitialV1, myLoftAngle1, myTime1);
+    96    travelDist2 = calcTravelDist(myInitialV2, myLoftAngle2, myTime2);
+    97    travelDist3 = calcTravelDist(myInitialV3, myLoftAngle3, myTime3);
+    98  
+    99    myDistFromHole1 = calcDistFromHole(myDistStartToHole, travelDist1);
+   100    myDistFromHole2 = calcDistFromHole(myDistStartToHole, travelDist2);
+   101    myDistFromHole3 = calcDistFromHole(myDistStartToHole, travelDist3);
+   102    
+   103    myRank1 = rank1(myDistFromHole1, myDistFromHole2, myDistFromHole3);
+   104    myRank2 = rank2(myDistFromHole1, myDistFromHole2, myDistFromHole3);
+   105    myRank3 = rank3(myDistFromHole1, myDistFromHole2, myDistFromHole3);
+   106  
+   107    text1Output(myDistStartToHole);
+   108  
+   109    output1(1, myClub1, myLoftAngle1, myInitialV1);
+   110    output1(2, myClub2, myLoftAngle2, myInitialV2);
+   111    output1(3, myClub3, myLoftAngle3, myInitialV3);
+   112  
+   113    text2Output();
+   114  
+   115    output2(1, myTime1, travelDist1, myDistFromHole1, myRank1);
+   116    output2(2, myTime2, travelDist2, myDistFromHole2, myRank2);
+   117    output2(3, myTime3, travelDist3, myDistFromHole3, myRank3);
+   118    
+   119    return(0);
+   120  }
+   121  
+   122  int enterSeed()
+   123  {
+   124    int seed;
+   125    printf("Enter a seed -> ");
+   126    scanf("%d", &seed); 
+   127    return(seed);
+   128  }
+   129  
+   130  int calcDistToHole(int seed)
+   131  {
+   132   int range;
+   133   int distStartToHole;
+   134  
+   135   range = (500 - 300) + 1;
+   136   distStartToHole = (int) rand() % range + 300;
+   137    
+   138   return(distStartToHole);
+   139  }
+   140  
+   141  int calcClub(int seed)
+   142  {
+   143    int range;
+   144    int club;
+   145  
+   146    range = (3 - 1) + 1;
+   147    club = rand() % range + 1;
+   148    return(club);
+   149  }
+   150  
+   151  int calcLoftAngle(int seed, int club)
+   152  {
+   153    int range;
+   154    int loftAngle;
+   155    int minimum;
+   156  
+   157  
+   158    minimum = 3 + club * 5;
+   159    
+   160  
+   161    loftAngle = (int) rand() % 6 + minimum;
+   162  
+   163    return(loftAngle);
+   164  }
+   165  
+   166  int calcInitialV (int seed)
+   167  {
+   168    int range;
+   169    int initialV;
+   170  
+   171    range = (60 - 40) + 1;
+   172    initialV = (int) rand() % 21 + 40;
+   173  
+   174    return(initialV);
+   175  }
+   176  
+   177  double calcTime(int initialV, int loftAngle)
+   178  {
+   179    double time;
+   180    time = (double)(2 * initialV * sin(loftAngle * M_PI / 180) /( 9.8 ));
+   181    return(time);
+   182  }
+   183  
+   184  double calcTravelDist(int initialV, int loftAngle, double time)
+   185  {
+   186    double travelDist;
+   187   
+   188    travelDist = (double)(initialV * cos(loftAngle * M_PI  / 180) * time);
+   189    travelDist = ((int)(travelDist * 10 )) / 10.0;
+   190    return(travelDist);
+   191  }
+   192  
+   193  double calcDistFromHole(int distStartToHole, double travelDist)
+   194  {
+   195    double distFromHole;
+   196  
+   197    distFromHole = fabs((double) distStartToHole - travelDist);
+   198  
+   199    distFromHole = ((int)(distFromHole * 10)) / 10.0;
+   200    return(distFromHole);
+   201  }
+   202  
+   203  int rank1(double distF1, double distF2, double distF3)
+   204  {
+   205    int factor1;
+   206    int factor2;
+   207    int theRank1;
+   208  
+   209    factor1 = distF2 / distF1;
+   210    factor2 = distF3 / distF1;
+   211    
+   212    theRank1 = 3 - (factor1 + factor2);
+   213    return (theRank1);
+   214    
+   215  }
+   216  
+   217  int rank2(double distF1, double distF2, double distF3)
+   218  {
+   219    int factor1;
+   220    int factor2;
+   221    int theRank2;
+   222  
+   223    factor1 = distF3 / distF2;
+   224    factor2 = distF1 / distF2;
+   225  
+   226    theRank2 = 3 - (factor1 + factor2);
+   227    return (theRank2);
+   228  }
+   229  
+   230  int rank3(double distF1, double distF2, double distF3)
+   231  {
+   232    int factor1;
+   233    int factor2;
+   234    int theRank3;
+   235  
+   236    factor1 = distF1 / distF3;
+   237    factor2 = distF2 / distF3;
+   238  
+   239    theRank3 = 3 - (factor1 + factor2);
+   240    return(theRank3);
+   241  }
+   242  void output1(int golfer, int club, int loftAngle, int velocity)
+   243  {
+   244    printf("  %d:%7d%9d%10d m/s\n", golfer, club, loftAngle, velocity);
+   245    return;
+   246  }
+   247  
+   248  void output2(int golfer, double time, double travelDist, double distFromHole, int rank)
+   249  {
+   250    printf("  %d:%8.2lf s%13.1lf m%18.1lf m%10d\n", golfer, time, travelDist, distFromHole, rank);
+   251    return;
+   252  }
+   253  
+   254  void text1Output(int myDistStartToHole)
+   255  {
+   256    printf("\nDistance to the hole: %d m\n", myDistStartToHole);
+   257    printf("\nGolfer  Club  Loft Angle  Velocity\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
+   258    return;
+   259  }
+   260  
+   261  void text2Output()
+   262  {
+   263    printf("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\nGolfer   Time     Travel Distance   Distance From Hole  Rank\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
+   264    return;
+   265  }
